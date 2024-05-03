@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, FC, Fragment, MouseEvent } from 'react';
-
+import Chance from 'chance';
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -209,7 +209,7 @@ const VehicleListPage = () => {
   const handleClose = () => {
     setOpen(!open);
   };
-
+  const chance = new Chance();
   const columns = useMemo(
     () => [
       {
@@ -227,7 +227,7 @@ const VehicleListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: 'Member Id',
+        Header: 'Vehicle',
         accessor: 'memberId',
         Cell: ({ row }: { row: Row }) => {
           const { values } = row;
@@ -235,7 +235,7 @@ const VehicleListPage = () => {
             <Stack direction="row" spacing={1.5} alignItems="center">
               <Avatar alt="Avatar 1" size="sm" src={avatarImage(`./avatar-${!values.avatar ? 1 : values.avatar}.png`)} />
               <Stack spacing={0}>
-                <Typography variant="subtitle1">{values.memberId}</Typography>
+                <Typography variant="subtitle1">{values.vehicle}</Typography>
                 <Typography color="text.secondary">{values.email}</Typography>
               </Stack>
             </Stack>
@@ -245,8 +245,13 @@ const VehicleListPage = () => {
       {
         Header: 'Brand',
         accessor: 'brand',
-        
-      },
+        Cell: () => (
+          <Stack direction="row" spacing={2} alignItems="center">
+            {/* Use chance.company() to generate a random brand name */}
+            <Typography variant="subtitle1">{chance.company()}</Typography>
+          </Stack>
+        )
+        },
       {
         Header: 'Email',
         accessor: 'email'
@@ -260,8 +265,10 @@ const VehicleListPage = () => {
         Header: 'Contact',
         accessor: 'contact',
         Cell: ({ value }: { value: number }) => (
+          <Stack direction="row" spacing={2} alignItems="center">
           <PatternFormat displayType="text" format="+1 (###) ###-####" mask="_" defaultValue={value} />
-        )
+          </Stack>
+         )
       },
       {
         Header: 'Variant',
@@ -277,8 +284,11 @@ const VehicleListPage = () => {
         accessor: 'vehicleNo'
       },
       {
+        title: 'EPC Tag',
         Header: 'EPC Tag',
-        accessor: 'epcTag'
+        accessor: 'epcTag',
+        Cell: ({ value } : {value: string}) => <span>{chance.string()}</span>, // Generate random string for EPC Tag column
+        disableSortBy: true
       },
       {
         Header: 'Status',

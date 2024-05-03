@@ -1,19 +1,18 @@
-// third-party
 import { sub } from 'date-fns';
 import { Chance } from 'chance';
 import lodash from 'lodash';
 
 const chance = new Chance();
 
-export const range = (len: number) => {
-  const arr = [];
+export const range = (len: number): number[] => {
+  const arr: number[] = [];
   for (let i = 0; i < len; i += 1) {
     arr.push(i);
   }
   return arr;
 };
 
-const skills = [
+const skills: string[] = [
   'UI Design',
   'Mobile App',
   'Web App',
@@ -30,7 +29,7 @@ const skills = [
   'Codeigniter'
 ];
 
-const time = ['just now', '1 day ago', '2 min ago', '2 days ago', '1 week ago', '1 year ago', '5 months ago', '3 hours ago', '1 hour ago'];
+const time: string[] = ['just now', '1 day ago', '2 min ago', '2 days ago', '1 week ago', '1 year ago', '5 months ago', '3 hours ago', '1 hour ago'];
 
 // ==============================|| CUSTOM FUNCTION - TABLE DATA ||============================== //
 
@@ -59,7 +58,8 @@ function mockData(index: number) {
     text: {
       title: chance.sentence({ words: chance.integer({ min: 4, max: 12 }) }),
       sentence: chance.sentence(),
-      description: chance.paragraph
+      description: chance.paragraph(),
+      brand: chance.company()
     },
     number: {
       percentage: chance.integer({ min: 0, max: 100 }),
@@ -73,7 +73,15 @@ function mockData(index: number) {
       avatar: (index: number) => `avatar_${index}`
     },
     skill: lodash.sampleSize(skills, chance.integer({ min: 2, max: 6 })),
-    time: lodash.sampleSize(time)
+    time: lodash.sampleSize(time, chance.integer({ min: 1, max: time.length })),
+    string: {
+      random: chance.string(),
+      length5: chance.string({ length: 5 }),
+      customPool: chance.string({ pool: 'abcde' }),
+      alphaOnly: chance.string({ alpha: true }),
+      lowerCase: chance.string({ casing: 'lower' }),
+      withSymbols: chance.string({ symbols: true })
+    }
   };
 }
 
